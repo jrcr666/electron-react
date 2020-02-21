@@ -1,0 +1,27 @@
+.containerAlerter {
+    display: block;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 10vh;
+    overflow: auto;
+    transition: all .5s ease-in-out;
+}
+
+.open {
+    transform: translateY(0%);
+}
+
+.close {
+    transform: translateY(-110%);
+}
+
+.error { background-color: #FA171A }
+
+.info { background-color: #2751FE }
+
+.success { background-color: #2DCC11 }
+
+.warning { background-color: #EBBE17 }
