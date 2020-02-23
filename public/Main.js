@@ -1,4 +1,6 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const fetch = require('node-fetch');
+
 const { log, table, error, warning } = console;
 
 
@@ -101,4 +103,16 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+
+
+ipcMain.on('getGames', (_, body) => {
+    fetch('https://graphql.epicgames.com/graphql', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(json => mainWindow.webContents.send('response:games', json));
 });

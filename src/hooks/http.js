@@ -11,30 +11,28 @@ const useHttp = props => {
         veil.setVeil();
 
         try {
-
-        	//throw new Error('copón');
-
             const response = await fetch(url, {
                 method,
                 ...body ? { body: JSON.stringify(body) } : {},
                 ...headers ? { headers } : {}
             });
             const { ok, status, type } = response;
-            dataJson = await response.json();
+            
+            if (method !== 'DELETE') dataJson = await response.json();
 
             console.table({ ok, status, type });
-        } catch ({message}) {
-            alerter.setAlerter({ active: true, text: message, type: 'error' })
+        } catch (e) {
+            veil.setVeil(false);
+
+            return alerter.setAlerter({ active: true, text: e.message, type: 'error' });
         }
 
         veil.setVeil(false);
 
-        alerter.setAlerter({ active: true, text: JSON.stringify(dataJson, null, 2), type: 'success' })
-
         return dataJson;
     }
 
-    const [data, setData] = useState({});
+    const [httpData, setData] = useState({});
 
     const GET = async (url, headers) => setData(await sendRequest({ url, headers }));
     const POST = async (url, body, headers) => setData(await sendRequest({ url, method: 'POST', body, headers }));
@@ -42,11 +40,8 @@ const useHttp = props => {
     const DELETE = async (url, headers) => setData(await sendRequest({ url, method: 'DELETE', headers }));
 
     return {
-        data,
-        GET,
-        POST,
-        PUT,
-        DELETE
+        httpData,
+        http: { GET, POST, PUT, DELETE }
     }
 }
 
